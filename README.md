@@ -56,3 +56,14 @@ npx tsx scripts/scheduler.ts
 - `DATABASE_URL`
 - `REDIS_URL`
 - `APP_URL`
+
+## Testing in Codex
+
+Run a smoke-test helper tailored for restricted Codex environments:
+
+```bash
+bash scripts/run-codex-tests.sh
+```
+
+This script checks project structure, Node/npm availability, optional `psql`, attempts dependency install + typecheck, and reports warnings when environment limitations block full runtime validation.
+
