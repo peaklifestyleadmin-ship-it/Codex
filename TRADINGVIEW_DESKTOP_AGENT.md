@@ -14,27 +14,62 @@ If you want this to run completely on your machine, use this repo as a local web
 - `tradingview_agent.py` - webhook app
 - `requirements.txt` - Python dependencies for local install
 - `.env.example` - local environment template
-- `run_local.sh` - one-command local setup + run
+- `run_local.sh` - one-command local setup + run (Linux/macOS)
+- `run_local.ps1` - one-command local setup + run (Windows PowerShell)
 
-## One-command local install and run
+## Before you run commands
+
+You must first open a terminal in your **actual cloned repo folder**.
+
+Examples:
+- Linux/macOS: `cd ~/projects/Codex`
+- Windows PowerShell: `cd C:\Users\<you>\source\repos\Codex`
+
+If `cd /workspace/Codex` fails on your machine, that means the repo is in a different path.
+
+## Linux/macOS quick start
 
 ```bash
+cp .env.example .env
+# edit .env and set TRADINGVIEW_WEBHOOK_SECRET
 ./run_local.sh
 ```
 
-This command will:
-- create `.venv` if missing,
-- install dependencies,
-- load `.env` values when present,
-- run `uvicorn` on local host/port.
+## Windows PowerShell quick start
 
-## Manual local setup (if you prefer)
+```powershell
+Copy-Item .env.example .env
+# edit .env and set TRADINGVIEW_WEBHOOK_SECRET
+.\run_local.ps1
+```
+
+Notes for Windows:
+- Use `Copy-Item`, not `cp` alias assumptions from Unix docs.
+- Use `.\run_local.ps1`, not `./run_local.sh`.
+- If script execution is blocked, run:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+Then run `.\run_local.ps1` again.
+
+## Manual local setup (cross-platform)
 
 ### 1) Create virtual environment
+
+Linux/macOS:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
+```
+
+Windows PowerShell:
+
+```powershell
+py -3 -m venv .venv
+.\.venv\Scripts\Activate.ps1
 ```
 
 ### 2) Install dependencies locally
@@ -47,16 +82,30 @@ pip install -r requirements.txt
 ### 3) Configure local environment
 
 ```bash
+# Linux/macOS
 cp .env.example .env
-# edit .env and set TRADINGVIEW_WEBHOOK_SECRET
+
+# Windows PowerShell
+Copy-Item .env.example .env
 ```
 
+Set `TRADINGVIEW_WEBHOOK_SECRET` in `.env`.
+
 ### 4) Start local server
+
+Linux/macOS:
 
 ```bash
 source .venv/bin/activate
 set -a; source .env; set +a
 uvicorn tradingview_agent:app --host 127.0.0.1 --port 8000 --reload
+```
+
+Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+python -m uvicorn tradingview_agent:app --host 127.0.0.1 --port 8000 --reload
 ```
 
 ## TradingView alert configuration
